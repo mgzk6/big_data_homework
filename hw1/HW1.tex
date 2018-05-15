@@ -1,0 +1,202 @@
+\documentclass[12pt,letterpaper]{hmcpset}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{url}  
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{array,multirow}
+\usepackage{adjustbox}
+
+\input{macros.tex}
+
+% info for header block in upper right hand corner
+\name{}
+\class{Math189R SU17}
+\assignment{Homework 1}
+\duedate{Tuesday, May 15, 2017}
+
+\renewcommand{\labelenumi}{{(\alph{enumi})}}
+
+
+\begin{document}
+Feel free to work with other students, but make sure you write up the homework
+and code on your own (no copying homework \textit{or} code; no pair programming).
+Feel free to ask students or instructors for help debugging code or whatever else,
+though.
+The starter code for problem 2 part c and d can be found under the Resource tab on course website.\\
+
+\textit{Note:} You need to create a Github account for submission of the coding part of the homework. Please create a repository on Github to hold all your code and include your Github account username as part of the answer to problem 2.
+
+\begin{problem}[1]
+(\textbf{Linear Transformation}) Let $\mathbf{y} = A\mathbf{x} + \mathbf{b}$ be a random vector.
+show that expectation is linear:
+\[
+    \EE[\yy] = \EE[A\xx + \bb] = A\EE[\xx] + \bb.
+\]
+Also show that
+\[
+    \cov[\yy] = \cov[A\xx + \bb] = A \cov[\xx] A^\T = A\Sigmab A^\T.
+\]
+\end{problem}
+\begin{solution}
+(a) By definition, we know that 
+$$
+\EE[\yy] = \EE[A\xx + \bb] = \int_{-\infty}^{+\infty} (A\xx + \bb)\PP(x) dx,
+$$
+then, we can evaluate the integral and get:
+\begin{align*}
+\EE[\yy]  & =  \int_{-\infty}^{+\infty} (A\xx) \PP(x) dx +  \int_{-\infty}^{+\infty} ( \bb)\PP(x) dx \\
+&  = A \int_{-\infty}^{+\infty} \xx \cdot \PP(x) dx + \bb \int_{-\infty}^{+\infty} \PP(x) dx\\
+& = A\EE[\xx] + \bb(1) \\ &= A\EE[\xx] + \bb
+\end{align*}
+(b) By definition, we know that 
+\begin{align*}
+  \cov[\yy] &= \cov[A\xx + \bb]\\
+  &= \EE[(A\xx + \bb - \EE[A\xx + \bb])(A\xx + \bb - \EE[A\xx + \bb])^\T]\\
+  &= \EE[(A\xx + \bb - (A\EE[\xx] + \bb)])(A\xx + \bb - (A\EE[\xx] + \bb))^\T]\\
+  & = \EE[(A\xx  - A\EE[\xx]))(A\xx - A\EE[\xx] )^\T]\\
+  & = \EE[(A\xx  - A\EE[\xx]))(\xx - \EE[\xx] )^\T A^\T] \\ 
+  & =A \EE[(\xx  - \EE[\xx]))(\xx - \EE[\xx] )^\T]A^\T \\ 
+  &=A \cov[\xx] A^\T \\
+  &= A\Sigmab A^\T
+\end{align*}
+\end{solution}
+\newpage
+
+
+
+
+\begin{problem}[2]
+Given the dataset $\Dc = \{(x,y)\} = \{(0,1), (2,3), (3,6), (4,8)\}$
+\begin{enumerate}
+   \item Find the least squares estimate $y = \thetab^\T\xx$ by hand using
+        Cramer's Rule.
+    \item Use the normal equations to find the same solution and verify it
+        is the same as part (a).
+    \item Plot the data and the optimal linear fit you found.
+    \item Find randomly generate 100 points near the line with white Gaussian
+        noise and then compute the least squares estimate (using a computer).
+        Verify that this new line is close to the original and plot the new
+        dataset, the old line, and the new line.
+\end{enumerate}
+
+\end{problem}
+\begin{solution}
+
+(a) let $y = \theta_{0} + \theta_{1} x$, and we know the design matrix to be:
+$$X = \begin{bmatrix}
+	1 & 0\\
+	1 & 2\\
+	1 & 3\\
+	1 & 4
+\end{bmatrix}
+$$
+From this, we can obtain:
+$$
+X^{\T}X  = \begin{bmatrix}
+	1 & 1 & 1 & 1\\
+	0 & 2 & 3 & 4\\
+\end{bmatrix}\begin{bmatrix}
+	1 & 0\\
+	1 & 2\\
+	1 & 3\\
+	1 & 4
+\end{bmatrix}  = \begin{bmatrix}
+4&9\\
+9&29
+\end{bmatrix}
+$$
+Since we are looking for the values of $ \theta_{0}$ and $ \theta_{1}$, and $X^{\T}X \thetab = X^{T}\textbf{y}$, where $\textbf{y} = \begin{bmatrix}
+1\\3\\6\\8
+\end{bmatrix}$.\\
+We can find the value of $X^{T}\textbf{y}$ at first and then use the Cramer's rule to find the value of $ \theta_{0}$ and $ \theta_{1}$ because $\thetab = \begin{bmatrix}
+\theta_{0}\\
+\theta_{1}
+\end{bmatrix}$. 
+$$
+X^\T\textbf{y} = \begin{bmatrix}
+	1 & 1 & 1 & 1\\
+	0 & 2 & 3 & 4\\
+\end{bmatrix}\begin{bmatrix}
+1\\3\\6\\8
+\end{bmatrix} = \begin{bmatrix}
+18\\
+56
+\end{bmatrix}
+$$
+Using Cramer's rule, we know
+$$
+\theta_{0} = \frac{\begin{vmatrix}
+18&9\\
+56&29
+\end{vmatrix}}{\begin{vmatrix}
+4&9\\
+9&29
+\end{vmatrix}} = \frac{18}{35}
+$$
+and 
+$$
+\theta_{1} = \frac{\begin{vmatrix}
+4&18\\
+9&56
+\end{vmatrix}}{\begin{vmatrix}
+4&9\\
+9&29
+\end{vmatrix}} = \frac{62}{35}.
+$$
+
+
+(b) Using normal equations, we can get:
+\begin{align*}
+\thetab & = (X^\T X)^{-1}X^{T}\textbf{y}\\
+& = \begin{bmatrix}
+4&9\\
+9&29
+\end{bmatrix}^{-1}\begin{bmatrix}
+1&1&1&1\\
+0&2&3&4
+\end{bmatrix}\begin{bmatrix}
+1\\3\\6\\8
+\end{bmatrix}\\
+& = \begin{bmatrix}
+\frac{29}{35} & -\frac{9}{35}\\
+-\frac{9}{35} & \frac{4}{35}
+\end{bmatrix}\begin{bmatrix}
+1&1&1&1\\
+0&2&3&4
+\end{bmatrix}\begin{bmatrix}
+1\\3\\6\\8
+\end{bmatrix}\\
+& = \begin{bmatrix}
+\frac{29}{35} & \frac{11}{35} & \frac{2}{35} & \frac{-7}{35} \\
+\frac{-9}{35} & \frac{-1}{35} & \frac{3}{35} & \frac{7}{35}
+\end{bmatrix}\\
+& = \begin{bmatrix}
+\frac{18}{35}\\
+\frac{62}{35}
+\end{bmatrix}
+\end{align*}
+This confirms the value of $\theta_0$ and $\theta_1$ in part (a).
+
+(c) Below is the fitted line based on the calculation of part (a) and part (b).
+\begin{center}
+\includegraphics[scale = .8]{hw1pr2c.png}\\
+\textbf{data with the calculated fit}
+\end{center}
+
+(d) Below is the fitted line for 100 randomly generated points.
+\begin{center}
+\includegraphics[scale = .8]{hw1pr2d.png}\\
+\textbf{data with the calculated fit}
+\end{center}
+As suggested by the plot, the fit with noise is incredibly close to the original fit.
+\end{solution}
+\newpage
+
+
+\end{document}
+
